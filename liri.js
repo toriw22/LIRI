@@ -18,7 +18,79 @@ inquirer.prompt([
 
 	}
 
-]).then(function(commands){ 
+
+	]).then(function(commands){ 
+
+	if (commands.command == "movie-this") {
+
+		inquirer.prompt([
+		{
+			type: "input",
+			name: "movieName",
+			message: "Which movie would you like to look up?",
+			default: "Mr+Nobody"
+		}
+		]).then(function(movie){ 
+
+			request("http://www.omdbapi.com/?t=" + movie.movieName + "&apikey=40e9cece", function(error, response, body) {
+			  	if (!error && response.statusCode === 200) {
+			  		console.log("Movie Title: " + JSON.parse(body).Title);
+			  		console.log("Year: " + JSON.parse(body).Year);
+			  		console.log("IMDB Rating: " + JSON.parse(body).Ratings[0].Value);
+			    	console.log(JSON.parse(body).Ratings[1].Source + " Rating: " + JSON.parse(body).Ratings[1].Value);
+			    	console.log("Country: " + JSON.parse(body).Country);
+			    	console.log("Language: " + JSON.parse(body).Language);
+			    	console.log("Plot: " + JSON.parse(body).Plot);
+			    	console.log("Actors: " + JSON.parse(body).Actors);
+
+		  		};
+			});
+		
+		});
+
+	};
+
+	
+
+	if (commands.command == "spotify-this-song") {
+		inquirer.prompt([
+		{
+			type: "input",
+			name: "songName",
+			message: "Which song would you like to look up?",
+			default: "Ace of Base"
+		}
+		]).then(function(song){ 
+			spotify.search({ 
+				type: 'track', 
+				query: song.songName, 
+			}).then(function(data) {
+				console.log(song.songName); 
+				console.log("Song Name: " + data.tracks.items[0].name);
+				console.log("Artist: " + data.tracks.items[0].artists[0].name);
+				console.log("Album Title: " + data.tracks.items[0].album.name);
+				console.log("URL: " + data.tracks.items[0].artists[0].external_urls.spotify)
+			return(song.songName);
+			}).catch(function(err) {
+    			console.log(err);
+  			});
+		});
+
+
+	};
+
+	
+
+	if (commands.command == "my-tweets") {
+
+		twitter.get('statuses/user_timeline', function(error, tweets, response) {
+			for (i = 0; i < tweets.length; i++) {
+				console.log(tweets[i].created_at + " ==> "+ tweets[i].text);
+			}
+		   
+		});
+	};
+
 	if (commands.command == "do-what-it-says") {
 		fs.readFile("random.txt", "utf8", function (err, data){ 
 			var dataArr = data.split(",");
@@ -36,73 +108,64 @@ inquirer.prompt([
 				default: dataArr[0]
 
 			}
-			]).then(function(commands){ 
+			
+		]).then(function(commands){ 
+		if (dataArr[0] == "spotify-this-song") {
+		inquirer.prompt([
+		{
+			type: "input",
+			name: "songName",
+			message: "Which song would you like to look up?",
+			default: dataArr[1]
+		}
+		]).then(function(song){ 
+			spotify.search({ 
+				type: 'track', 
+				query: song.songName, 
+			}).then(function(data) {
+				console.log(song.songName); 
+				console.log("Song Name: " + data.tracks.items[0].name);
+				console.log("Artist: " + data.tracks.items[0].artists[0].name);
+				console.log("Album Title: " + data.tracks.items[0].album.name);
+				console.log("URL: " + data.tracks.items[0].artists[0].external_urls.spotify)
+			return(song.songName);
+			}).catch(function(err) {
+    			console.log(err);
+  			});
+		});
 
-			if (commands.command == "movie-this") {
 
-				inquirer.prompt([
-				{
-					type: "input",
-					name: "movieName",
-					message: "Which movie would you like to look up?",
-					default: "Mr+Nobody"
-				}
-				]).then(function(movie){ 
+	};
 
-					request("http://www.omdbapi.com/?t=" + movie.movieName + "&apikey=40e9cece", function(error, response, body) {
-					  	if (!error && response.statusCode === 200) {
-					  		console.log("Movie Title: " + JSON.parse(body).Title);
-					  		console.log("Year: " + JSON.parse(body).Year);
-					  		console.log("IMDB Rating: " + JSON.parse(body).Ratings[0].Value);
-					    	console.log(JSON.parse(body).Ratings[1].Source + " Rating: " + JSON.parse(body).Ratings[1].Value);
-					    	console.log("Country: " + JSON.parse(body).Country);
-					    	console.log("Language: " + JSON.parse(body).Language);
-					    	console.log("Plot: " + JSON.parse(body).Plot);
-					    	console.log("Actors: " + JSON.parse(body).Actors);
+		if (dataArr[0] == "movie-this") {
 
-				  		};
-					});
-				
+			inquirer.prompt([
+			{
+				type: "input",
+				name: "movieName",
+				message: "Which movie would you like to look up?",
+				default: dataArr[1]
+			}
+			]).then(function(movie){ 
+
+				request("http://www.omdbapi.com/?t=" + movie.movieName + "&apikey=40e9cece", function(error, response, body) {
+				  	if (!error && response.statusCode === 200) {
+				  		console.log("Movie Title: " + JSON.parse(body).Title);
+				  		console.log("Year: " + JSON.parse(body).Year);
+				  		console.log("IMDB Rating: " + JSON.parse(body).Ratings[0].Value);
+				    	console.log(JSON.parse(body).Ratings[1].Source + " Rating: " + JSON.parse(body).Ratings[1].Value);
+				    	console.log("Country: " + JSON.parse(body).Country);
+				    	console.log("Language: " + JSON.parse(body).Language);
+				    	console.log("Plot: " + JSON.parse(body).Plot);
+				    	console.log("Actors: " + JSON.parse(body).Actors);
+
+			  		};
 				});
+			
+			});
 
-			};
-			if (commands.command == "spotify-this-song") {
-				inquirer.prompt([
-				{
-					type: "input",
-					name: "songName",
-					message: "Which song would you like to look up?",
-					default: "Ace of Base"
-				}
-				]).then(function(song){ 
-					spotify.search({ 
-						type: 'track', 
-						query: song.songName, 
-					}).then(function(data) {
-						console.log(song.songName); 
-						console.log("Song Name: " + data.tracks.items[0].name);
-						console.log("Artist: " + data.tracks.items[0].artists[0].name);
-						console.log("Album Title: " + data.tracks.items[0].album.name);
-						console.log("URL: " + data.tracks.items[0].artists[0].external_urls.spotify)
-					return(song.songName);
-					}).catch(function(err) {
-		    			console.log(err);
-		  			});
-				});
+		};
 
-
-			};
-
-			if (commands.command == "my-tweets") {
-
-				twitter.get('statuses/user_timeline', function(error, tweets, response) {
-					for (i = 0; i < tweets.length; i++) {
-						console.log(tweets[i].created_at + " ==> "+ tweets[i].text);
-					}
-				   
-				});
-
-			};
 			
 
 			});
