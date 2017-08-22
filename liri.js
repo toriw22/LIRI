@@ -21,6 +21,9 @@ inquirer.prompt([
 ]).then(function(commands){ 
 	if (commands.command == "do-what-it-says") {
 		fs.readFile("random.txt", "utf8", function (err, data){ 
+			var dataArr = data.split(",");
+			console.log(dataArr[0]);
+			console.log(typeof dataArr);
 			if (err) {
 				return console.log(err);
 			}
@@ -30,7 +33,7 @@ inquirer.prompt([
 				name: "command",
 				message: "How can I help you?",
 				choices: ["my-tweets", "spotify-this-song", "movie-this", "do-what-it-says"],
-				default: data
+				default: dataArr[0]
 
 			}
 			]).then(function(commands){ 
@@ -100,12 +103,6 @@ inquirer.prompt([
 				});
 
 			};
-
-	
-			// var dataArr = data.toString.split(",");
-			// console.log(data[0]);
-			// commands.command = data[0];
-			// song.songName = data[1];
 			
 
 			});
