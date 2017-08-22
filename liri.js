@@ -108,7 +108,7 @@ inquirer.prompt([
 				default: dataArr[0]
 
 			}
-			
+
 		]).then(function(commands){ 
 		if (dataArr[0] == "spotify-this-song") {
 		inquirer.prompt([
@@ -164,6 +164,17 @@ inquirer.prompt([
 			
 			});
 
+		};
+
+
+		if (dataArr[0] == "my-tweets") {
+
+			twitter.get('statuses/user_timeline', function(error, tweets, response) {
+				for (i = 0; i < tweets.length; i++) {
+					console.log(tweets[i].created_at + " ==> "+ tweets[i].text);
+				}
+			   
+			});
 		};
 
 			
