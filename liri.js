@@ -20,7 +20,7 @@ inquirer.prompt([
 
 
 	]).then(function(commands){ 
-
+// maybe function here? movie-this re-prompted
 	if (commands.command == "movie-this") {
 
 		inquirer.prompt([
@@ -92,6 +92,7 @@ inquirer.prompt([
 	};
 
 	if (commands.command == "do-what-it-says") {
+
 		fs.readFile("random.txt", "utf8", function (err, data){ 
 			var dataArr = data.split(",");
 			console.log(dataArr[0]);
